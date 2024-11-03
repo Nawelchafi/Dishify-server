@@ -14,4 +14,4 @@ function validationErrorHandler(err, req, res, next) {
     //  if no error accurs call next to Pass any other type of errors to the next error handler
     next(err);
 }
-model.export = validationErrorHandler
+module.export = validationErrorHandler
