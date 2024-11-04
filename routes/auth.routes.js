@@ -50,5 +50,45 @@ router.post('/signup', async (req, res, next) => {
         next(error); // Pass errors to the error handler middleware
     }
 });
+router.post('/login', async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+        if (email === '' || password === '') {
+            res.status(400).json({ message: "Provide email and password." });
+            return;
+        }
+        const foundUser = await User.findOne({ email }); // find the user by email
+        if (!foundUser) {
+            res.status(401).json({ message: "Invalid email or password" });
+            return;
+        }
+        // Compare the provided password with the one saved in the database
+        const passwordCorrect = bcrypt.compareSync(password, foundUser.password); // we pass the paintext of the password and the function will occupy of extracting the salts from the foundUser.password and apply it to the passed password  
+        if (!passwordCorrect) {
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+        else {
+            // Deconstruct the user object to omit the password
+            const { _id, email } = foundUser;
+            // Create an object that will be set as the token payload
+            const payload = { _id, email };
+
+            // Create and sign the token
+            const authToken = jwt.sign(
+                payload,
+                process.env.TOKEN_SECRET,
+                { algorithm: 'HS256' }
+            );
+
+            // Send the token as the response
+            res.status(200).json({ authToken: authToken });
+        }
+
+    }
+    catch (error) {
+        next(error); // Pass errors to the error handler middleware
+    }
+});
 
 
+module.exports = router;
