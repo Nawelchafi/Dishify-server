@@ -1,8 +1,8 @@
-import { Schema, model } from "mongoose";
+const { Schema, model } = require("mongoose");
 const recipieSchema = new Schema({
 
     title: {
-        type: String,
+        type: [String],
         required: [true, 'Title is required.'],
         trim: true // Removes whitespace from both ends of the string
     },
@@ -12,20 +12,32 @@ const recipieSchema = new Schema({
     },
     instructions: {
         type: String,
+        required: [true, 'add a short description of the recipe.'],
     },
     cookingTime: {
-        type: Number, // Time in minutes
-        required: [true, 'Cooking time is required.']
+        type: Number, // String to hold cooking time
+        required: [true, 'cooking time is required .'],
     },
     servings: {
-        type: Number,
-        required: [true, 'Number of servings is required.']
+        type: String,
+
+    },
+    category: {
+        type: String,
+        enum: ['Appetizer', 'Main Course', 'Dessert', 'Snack', 'Drink', 'Other'],
+
+        required: true,
+    },
+    origin: {
+        type: String,
+        enum: ['Italian', 'Mexican', 'Indian', 'Asian', 'American', "kid-friendly", 'Other'],
+        required: true,
     },
     imageURL: {
         type: String,
         required: false
     },
-    author: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User', // Reference to the User model
     },

@@ -20,6 +20,10 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Name is required.']
     },
+    recipies: [{
+      type: Schema.Types.ObjectId,
+      ref: "Recipie"
+    }] // Array of references to Recipie documents}
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

@@ -1,7 +1,7 @@
 const { expressjwt: jwt } = require("express-jwt");
 
 // Instantiate the JWT token validation middleware
-const isAuthenticated = jwt({
+const isAuthenticated = jwt({ // this jwt builtin function if tocken is valid it has built in mechanism that allows it to attach the payload to the request object
     secret: process.env.TOKEN_SECRET,
     algorithms: ["HS256"],
     requestProperty: 'payload',
