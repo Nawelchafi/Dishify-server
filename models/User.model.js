@@ -13,13 +13,14 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required.'],
+      required: [false, 'Password is required.'],
       minlength: [8, 'Password must be at least 8 characters long.']
     },
     name: {
       type: String,
       required: [true, 'Name is required.']
     },
+    googleId: { type: String, required: false },
     recipies: [{
       type: Schema.Types.ObjectId,
       ref: "Recipie"

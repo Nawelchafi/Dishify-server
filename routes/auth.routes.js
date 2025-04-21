@@ -69,16 +69,25 @@ router.post('/google', async (req, res, next) => {
         let user = await User.findOne({ googleId });
 
         if (!user) {
-            // If user does not exist, create a new user
-            user = await User.create({ email, name, googleId });
-         }    // Create a JWT token to use in your app
-            const jwtPayload = { _id: user._id, email: user.email, name: user.name };
-            const authToken = jwt.sign(jwtPayload, process.env.TOKEN_SECRET, {
-                algorithm: 'HS256',
+            // If no googleId match, but email exists (manual sign-up), link accounts
+            user = await User.findOne({ email });
 
-            });
+            if (user) {
+                // Optionally update the user to add googleId (merge accounts)
+                user.googleId = googleId;
+                await user.save();
+            } else {
+                // Full new user
+                user = await User.create({ email, name, googleId });
+            }
+        }    // Create a JWT token to use in your app
+        const jwtPayload = { _id: user._id, email: user.email, name: user.name };
+        const authToken = jwt.sign(jwtPayload, process.env.TOKEN_SECRET, {
+            algorithm: 'HS256',
 
-       
+        });
+
+
         // Send the JWT to the frontend
         res.status(200).json({ token: authToken });
 
